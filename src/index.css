@@ -1,27 +1,30 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #1E1E2E;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
-  min-width: 320px;
-  min-height: 100vh;
+:root {
+  --bg: #1E1E2E;
+  --panel-left: #252538;
+  --panel-center: #26263A;
+  --panel-right: #243328;
+  --text-primary: #E8E4F0;
+  --text-secondary: #9A96AA;
+  --card-bg: rgba(255, 255, 255, 0.07);
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --card-radius: 12px;
+  --font: 'Inter', system-ui, sans-serif;
 }
 
-#root {
-  min-height: 100vh;
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
 }
