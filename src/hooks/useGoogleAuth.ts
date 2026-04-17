@@ -1,9 +1,13 @@
-import { useState, useEffect, useCallback } from 'react'
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Preferences } from '@capacitor/preferences'
 
 const TOKEN_KEY = 'google_access_token'
 const EXPIRY_KEY = 'google_token_expiry'
+
+const SCOPES = [
+  'https://www.googleapis.com/auth/calendar.readonly',
+  'https://www.googleapis.com/auth/tasks',
+].join(' ')
 
 export interface AuthState {
   accessToken: string | null
@@ -13,20 +17,31 @@ export interface AuthState {
   signOut: () => Promise<void>
 }
 
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        oauth2: {
+          initTokenClient: (config: {
+            client_id: string
+            scope: string
+            callback: (resp: { access_token?: string; expires_in?: number; error?: string }) => void
+          }) => { requestAccessToken: () => void }
+        }
+      }
+    }
+  }
+}
+
 export function useGoogleAuth(): AuthState {
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const clientRef = useRef<{ requestAccessToken: () => void } | null>(null)
+  const resolveRef = useRef<((token: string) => void) | null>(null)
+  const rejectRef = useRef<((err: Error) => void) | null>(null)
 
   useEffect(() => {
-    GoogleAuth.initialize({
-      clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-      scopes: [
-        'https://www.googleapis.com/auth/calendar.readonly',
-        'https://www.googleapis.com/auth/tasks',
-      ],
-      grantOfflineAccess: true,
-    })
     restoreToken()
   }, [])
 
@@ -38,19 +53,57 @@ export function useGoogleAuth(): AuthState {
         setAccessToken(token)
       }
     } catch {
-      // no stored token — user needs to sign in
+      // no stored token
     } finally {
       setLoading(false)
     }
+  }
+
+  function initClient(): Promise<{ requestAccessToken: () => void }> {
+    return new Promise((resolve, reject) => {
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+      if (!clientId) {
+        reject(new Error('VITE_GOOGLE_CLIENT_ID not set'))
+        return
+      }
+
+      function tryInit() {
+        if (window.google?.accounts?.oauth2) {
+          const client = window.google.accounts.oauth2.initTokenClient({
+            client_id: clientId,
+            scope: SCOPES,
+            callback: (resp) => {
+              if (resp.error || !resp.access_token) {
+                rejectRef.current?.(new Error(resp.error ?? 'No token returned'))
+              } else {
+                resolveRef.current?.(resp.access_token)
+              }
+            },
+          })
+          resolve(client)
+        } else {
+          setTimeout(tryInit, 100)
+        }
+      }
+      tryInit()
+    })
   }
 
   const signIn = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
-      const user = await GoogleAuth.signIn()
-      const token = user.authentication.accessToken
-      const expiry = Date.now() + 55 * 60 * 1000 // treat as 55-min lifetime
+      if (!clientRef.current) {
+        clientRef.current = await initClient()
+      }
+
+      const token = await new Promise<string>((resolve, reject) => {
+        resolveRef.current = resolve
+        rejectRef.current = reject
+        clientRef.current!.requestAccessToken()
+      })
+
+      const expiry = Date.now() + 55 * 60 * 1000
       await Preferences.set({ key: TOKEN_KEY, value: token })
       await Preferences.set({ key: EXPIRY_KEY, value: String(expiry) })
       setAccessToken(token)
@@ -62,10 +115,10 @@ export function useGoogleAuth(): AuthState {
   }, [])
 
   const signOut = useCallback(async () => {
-    await GoogleAuth.signOut()
     await Preferences.remove({ key: TOKEN_KEY })
     await Preferences.remove({ key: EXPIRY_KEY })
     setAccessToken(null)
+    clientRef.current = null
   }, [])
 
   return { accessToken, loading, error, signIn, signOut }
