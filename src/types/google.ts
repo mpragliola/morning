@@ -18,3 +18,10 @@ export interface TaskList {
   id: string
   title: string
 }
+
+export interface CalendarMeta {
+  id: string
+  summary: string
+  backgroundColor: string
+  foregroundColor: string
+}
