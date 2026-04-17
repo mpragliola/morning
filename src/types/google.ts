@@ -5,6 +5,8 @@ export interface CalendarEvent {
   end: { dateTime?: string; date?: string }
   colorId?: string
   backgroundColor?: string
+  location?: string
+  description?: string
 }
 
 export interface Task {
