@@ -29,7 +29,7 @@ export function TaskCard({ task, onToggle }: Props) {
         style={{ width: '34px', height: '34px', cursor: 'pointer', accentColor: '#9A96AA', flexShrink: 0 }}
       />
       <span style={{
-        fontSize: '42px',
+        fontSize: '21px',
         lineHeight: 1.25,
         textDecoration: isComplete ? 'line-through' : 'none',
         color: isComplete ? 'var(--text-secondary)' : 'var(--text-primary)',
