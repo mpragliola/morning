@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchTasks, completeTask } from '../api/tasks'
+import { fetchTasks, completeTask, uncompleteTask } from '../api/tasks'
 import type { Task } from '../types/google'
 
 const POLL_MS = 5 * 60 * 1000
@@ -35,20 +35,24 @@ export function useTasks(accessToken: string | null) {
     return () => { cancelled = true; clearInterval(id) }
   }, [accessToken])
 
-  const markComplete = useCallback(async (taskId: string) => {
-    // Optimistic update
+  const toggleTask = useCallback(async (taskId: string, currentStatus: 'needsAction' | 'completed') => {
+    const newStatus = currentStatus === 'needsAction' ? 'completed' : 'needsAction'
     setTasks(prev =>
-      prev.map(t => t.id === taskId ? { ...t, status: 'completed' as const } : t)
+      prev.map(t => t.id === taskId ? { ...t, status: newStatus } : t)
     )
     try {
-      await completeTask(accessToken!, listId, taskId)
+      if (newStatus === 'completed') {
+        await completeTask(accessToken!, listId, taskId)
+      } else {
+        await uncompleteTask(accessToken!, listId, taskId)
+      }
     } catch {
       // Revert on failure
       setTasks(prev =>
-        prev.map(t => t.id === taskId ? { ...t, status: 'needsAction' as const } : t)
+        prev.map(t => t.id === taskId ? { ...t, status: currentStatus } : t)
       )
     }
   }, [accessToken, listId])
 
-  return { tasks, loading, error, markComplete }
+  return { tasks, loading, error, toggleTask }
 }

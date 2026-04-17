@@ -35,3 +35,19 @@ export async function completeTask(
     }
   )
 }
+
+export async function uncompleteTask(
+  accessToken: string,
+  listId: string,
+  taskId: string
+): Promise<void> {
+  // Must clear `completed` date AND set status — setting status alone doesn't work
+  await googleFetch(
+    `https://www.googleapis.com/tasks/v1/lists/${listId}/tasks/${taskId}`,
+    accessToken,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'needsAction', completed: null }),
+    }
+  )
+}

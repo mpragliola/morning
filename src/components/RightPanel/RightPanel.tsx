@@ -6,17 +6,17 @@ interface Props {
   tasks: Task[]
   loading: boolean
   error: string | null
-  onComplete: (id: string) => void
+  onToggle: (id: string, status: 'needsAction' | 'completed') => void
 }
 
-export function RightPanel({ tasks, loading, error, onComplete }: Props) {
+export function RightPanel({ tasks, loading, error, onToggle }: Props) {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <h2 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '20px', color: 'var(--text-secondary)' }}>
         Tasks
       </h2>
       <div style={{ flex: 1, overflowY: 'auto' }}>
-        <TasksWidget tasks={tasks} loading={loading} error={error} onComplete={onComplete} />
+        <TasksWidget tasks={tasks} loading={loading} error={error} onToggle={onToggle} />
       </div>
     </div>
   )

@@ -3,10 +3,10 @@ import type { Task } from '../../types/google'
 
 interface Props {
   task: Task
-  onComplete: (id: string) => void
+  onToggle: (id: string, status: 'needsAction' | 'completed') => void
 }
 
-export function TaskCard({ task, onComplete }: Props) {
+export function TaskCard({ task, onToggle }: Props) {
   const isComplete = task.status === 'completed'
 
   return (
@@ -25,8 +25,8 @@ export function TaskCard({ task, onComplete }: Props) {
         type="checkbox"
         role="checkbox"
         checked={isComplete}
-        onChange={() => { if (!isComplete) onComplete(task.id) }}
-        style={{ width: '22px', height: '22px', cursor: isComplete ? 'default' : 'pointer', accentColor: '#9A96AA' }}
+        onChange={() => onToggle(task.id, task.status)}
+        style={{ width: '22px', height: '22px', cursor: 'pointer', accentColor: '#9A96AA' }}
       />
       <span style={{
         fontSize: '20px',

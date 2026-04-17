@@ -62,7 +62,7 @@ export default function App() {
         <CenterPanel events={calendar.events} loading={calendar.loading} error={calendar.error} />
       </div>
       <div style={{ background: 'var(--panel-right)', padding: '24px', overflowY: 'auto' }}>
-        <RightPanel tasks={tasks.tasks} loading={tasks.loading} error={tasks.error} onComplete={tasks.markComplete} />
+        <RightPanel tasks={tasks.tasks} loading={tasks.loading} error={tasks.error} onToggle={tasks.toggleTask} />
       </div>
     </div>
   )
