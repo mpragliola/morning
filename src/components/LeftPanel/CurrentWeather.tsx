@@ -24,7 +24,7 @@ export function CurrentWeather({ temp, condition, weatherCode }: Props) {
     <div style={{ textAlign: 'center', padding: '8px 0' }}>
       <div style={{ fontSize: '48px' }}>{weatherEmoji(weatherCode)}</div>
       <div style={{ fontSize: '48px', fontWeight: 300, lineHeight: 1 }}>{temp}°</div>
-      <div style={{ fontSize: '18px', color: 'var(--text-secondary)', marginTop: '4px' }}>{condition}</div>
+      <div style={{ fontSize: '26px', color: 'var(--text-secondary)', marginTop: '6px' }}>{condition}</div>
     </div>
   )
 }

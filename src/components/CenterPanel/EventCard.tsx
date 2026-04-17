@@ -23,17 +23,17 @@ export function EventCard({ event }: Props) {
       background: 'var(--card-bg)',
       borderRadius: 'var(--card-radius)',
       boxShadow: 'var(--card-shadow)',
-      padding: '14px 16px',
-      marginBottom: '10px',
-      borderLeft: `4px solid ${accentColor}`,
+      padding: '18px 20px',
+      marginBottom: '12px',
+      borderLeft: `5px solid ${accentColor}`,
       display: 'flex',
       alignItems: 'flex-start',
-      gap: '12px',
+      gap: '16px',
     }}>
-      <span style={{ fontSize: '15px', color: 'var(--text-secondary)', minWidth: '48px', paddingTop: '2px' }}>
+      <span style={{ fontSize: '28px', color: 'var(--text-secondary)', minWidth: '80px', paddingTop: '4px' }}>
         {startTime}
       </span>
-      <span style={{ fontSize: '20px', fontWeight: 500 }}>{event.summary}</span>
+      <span style={{ fontSize: '42px', fontWeight: 500, lineHeight: 1.2 }}>{event.summary}</span>
     </div>
   )
 }

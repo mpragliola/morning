@@ -14,11 +14,11 @@ export function TaskCard({ task, onToggle }: Props) {
       background: 'var(--card-bg)',
       borderRadius: 'var(--card-radius)',
       boxShadow: 'var(--card-shadow)',
-      padding: '14px 16px',
-      marginBottom: '10px',
+      padding: '18px 20px',
+      marginBottom: '12px',
       display: 'flex',
       alignItems: 'center',
-      gap: '12px',
+      gap: '16px',
       opacity: isComplete ? 0.6 : 1,
     }}>
       <input
@@ -26,10 +26,11 @@ export function TaskCard({ task, onToggle }: Props) {
         role="checkbox"
         checked={isComplete}
         onChange={() => onToggle(task.id, task.status)}
-        style={{ width: '22px', height: '22px', cursor: 'pointer', accentColor: '#9A96AA' }}
+        style={{ width: '34px', height: '34px', cursor: 'pointer', accentColor: '#9A96AA', flexShrink: 0 }}
       />
       <span style={{
-        fontSize: '20px',
+        fontSize: '42px',
+        lineHeight: 1.25,
         textDecoration: isComplete ? 'line-through' : 'none',
         color: isComplete ? 'var(--text-secondary)' : 'var(--text-primary)',
       }}>

@@ -13,7 +13,7 @@ export function CenterPanel({ events, loading, error }: Props) {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <h2 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '20px', color: 'var(--text-secondary)' }}>
+      <h2 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '24px', color: 'var(--text-secondary)' }}>
         {today}
       </h2>
       <div style={{ flex: 1, overflowY: 'auto' }}>
