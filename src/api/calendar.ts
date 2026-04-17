@@ -55,7 +55,7 @@ export async function fetchCalendarList(accessToken: string): Promise<CalendarMe
     accessToken
   )
   const data = await res.json()
-  return (data.items ?? []).map((c: { id: string; summary: string; backgroundColor: string; foregroundColor: string }) => ({
+  return (data.items ?? []).map((c: CalendarMeta) => ({
     id: c.id,
     summary: c.summary,
     backgroundColor: c.backgroundColor ?? '#4285F4',
