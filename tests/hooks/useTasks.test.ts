@@ -23,7 +23,7 @@ describe('useTasks', () => {
     const { result } = renderHook(() => useTasks('valid-token'))
     await waitFor(() => expect(result.current.loading).toBe(false))
 
-    await act(async () => { await result.current.markComplete('t1') })
+    await act(async () => { await result.current.toggleTask('t1', 'needsAction') })
     expect(result.current.tasks[0].status).toBe('completed')
   })
 })
