@@ -27,6 +27,11 @@ export function EventCard({ event }: Props) {
   const [open, setOpen] = useState(false)
 
   const isAllDay = !event.start.dateTime
+  const isPast = isAllDay
+    ? false
+    : event.end.dateTime
+      ? new Date(event.end.dateTime) < new Date()
+      : new Date(event.start.dateTime!) < new Date()
   const startTime = isAllDay ? 'All day' : formatTime(event.start.dateTime!)
   const endTime = !isAllDay && event.end.dateTime ? formatTime(event.end.dateTime) : null
   const duration = !isAllDay && event.start.dateTime && event.end.dateTime
@@ -52,6 +57,7 @@ export function EventCard({ event }: Props) {
           alignItems: 'flex-start',
           gap: '16px',
           cursor: 'pointer',
+          opacity: isPast ? 0.35 : 1,
         }}
       >
         {/* Time column */}
