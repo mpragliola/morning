@@ -56,3 +56,5 @@ All theming via CSS custom properties in `src/index.css`. No CSS-in-JS library â
 
 - **Unit tests**: Vitest + Testing Library. Config in `tsconfig.test.json`; setup in `src/test-setup.ts`.
 - **E2e tests**: Playwright. `e2e/fixtures.ts` exports an `authenticatedPage` fixture that injects a fake token into `localStorage` and mocks all external APIs (Google Calendar, Google Tasks, Open-Meteo, Nominatim) via `page.route`. Use this fixture for any test that needs the authenticated dashboard.
+
+**Rule: always update the test suite when implementing any feature or fix.** Every new hook gets a unit test. Every new component gets a unit test. Any user-visible behaviour change gets an e2e test. Never mark a task complete without running `npm run test` and `npm run test:e2e`.

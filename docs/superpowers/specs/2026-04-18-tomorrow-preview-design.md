@@ -68,6 +68,13 @@ Renders the fixed-height section: label + list of compact rows. If `events.lengt
 - Tomorrow section occupies exactly ~18% of the panel height regardless of content
 - No interaction on tomorrow's rows (no click-to-open modal)
 
+## Testing
+
+- **`useTomorrowCalendar` unit test** — mock `fetchEventsInRange`, verify it's called with tomorrow's date range, verify events are returned and sorted
+- **`TomorrowPreview` unit test** — renders time + title for each event; renders nothing when `events` is empty; truncates to what fits (overflow hidden, no crash on many events)
+- **`calendar.ts` unit test** — verify `fetchEventsInRange` correctly constructs the URL with given `timeMin`/`timeMax`
+- **E2e test** — `authenticatedPage` fixture mocks both today and tomorrow calendar responses; assert tomorrow's label and at least one tomorrow event title appear in the panel
+
 ## Out of scope
 
 - Clicking a tomorrow event to open its detail modal
