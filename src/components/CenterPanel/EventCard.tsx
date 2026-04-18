@@ -74,16 +74,6 @@ export function EventCard({ event }: Props) {
         {/* Content column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: 0 }}>
           <span style={{ fontSize: '42px', fontWeight: 500, lineHeight: 1.2 }}>{event.summary}</span>
-          {event.location && (
-            <span style={{ fontSize: '18px', color: 'var(--text-secondary)', opacity: 0.8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              📍 {event.location}
-            </span>
-          )}
-          {firstLineDesc && (
-            <span style={{ fontSize: '18px', color: 'var(--text-secondary)', opacity: 0.7, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {firstLineDesc}
-            </span>
-          )}
         </div>
       </div>
 

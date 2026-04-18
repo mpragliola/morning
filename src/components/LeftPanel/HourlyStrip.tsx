@@ -19,7 +19,7 @@ export function HourlyStrip({ slots }: Props) {
             {new Date(slot.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
           </span>
           <span style={{ fontSize: '20px' }}>{weatherEmoji(slot.weatherCode)}</span>
-          <span style={{ fontSize: '15px', fontWeight: 500 }}>{slot.temp}°</span>
+          <span style={{ fontSize: '15px', fontWeight: 500 }}>{slot.temp}</span>
         </div>
       ))}
     </div>

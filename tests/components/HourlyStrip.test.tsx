@@ -12,8 +12,8 @@ const slots: HourlySlot[] = [
 describe('HourlyStrip', () => {
   it('renders each slot with temp and hour', () => {
     render(<HourlyStrip slots={slots} />)
-    expect(screen.getByText('17°')).toBeInTheDocument()
-    expect(screen.getByText('18°')).toBeInTheDocument()
+    expect(screen.getByText('17')).toBeInTheDocument()
+    expect(screen.getByText('18')).toBeInTheDocument()
     expect(screen.getByText('10:00')).toBeInTheDocument()
     expect(screen.getByText('11:00')).toBeInTheDocument()
   })

@@ -5,6 +5,9 @@ async function injectFakeAuth(page: Page) {
     // Capacitor Preferences in browser uses 'CapacitorStorage.' prefix per key
     localStorage.setItem('CapacitorStorage.google_access_token', 'fake-access-token')
     localStorage.setItem('CapacitorStorage.google_token_expiry', String(Date.now() + 55 * 60 * 1000))
+    // Inject saved location so useLocation skips geolocation (Milan)
+    localStorage.setItem('CapacitorStorage.location_lat', '45.4642')
+    localStorage.setItem('CapacitorStorage.location_lon', '9.1900')
   })
 }
 
