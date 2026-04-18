@@ -15,12 +15,17 @@ export function wmoCondition(code: number): string {
   return WMO[code] ?? 'Unknown'
 }
 
+function timeFromISO(iso: string): string {
+  const d = new Date(iso)
+  return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+}
+
 export async function fetchWeather(lat: number, lon: number): Promise<WeatherData> {
   const url = new URL('https://api.open-meteo.com/v1/forecast')
   url.searchParams.set('latitude', String(lat))
   url.searchParams.set('longitude', String(lon))
   url.searchParams.set('current', 'temperature_2m,weather_code')
-  url.searchParams.set('daily', 'temperature_2m_min,temperature_2m_max')
+  url.searchParams.set('daily', 'temperature_2m_min,temperature_2m_max,sunrise,sunset')
   url.searchParams.set('hourly', 'temperature_2m,weather_code')
   url.searchParams.set('forecast_days', '1')
   url.searchParams.set('timezone', 'auto')
@@ -46,7 +51,36 @@ export async function fetchWeather(lat: number, lon: number): Promise<WeatherDat
     today: {
       min: data.daily.temperature_2m_min[0],
       max: data.daily.temperature_2m_max[0],
+      sunrise: timeFromISO(data.daily.sunrise[0]),
+      sunset: timeFromISO(data.daily.sunset[0]),
     },
     hourly,
+  }
+}
+
+// Reverse geocode using Open-Meteo's geocoding API. Falls back to coords string.
+export async function reverseGeocode(lat: number, lon: number): Promise<string> {
+  try {
+    const url = new URL('https://nominatim.openstreetmap.org/reverse')
+    url.searchParams.set('lat', String(lat))
+    url.searchParams.set('lon', String(lon))
+    url.searchParams.set('format', 'json')
+    url.searchParams.set('zoom', '10')
+
+    const res = await fetch(url.toString(), {
+      headers: { 'Accept-Language': 'en', 'User-Agent': 'MorningDashboard/1.0' },
+    })
+    if (!res.ok) throw new Error('geocode failed')
+    const data = await res.json()
+    return (
+      data.address?.city ||
+      data.address?.town ||
+      data.address?.village ||
+      data.address?.county ||
+      data.display_name?.split(',')[0] ||
+      `${lat.toFixed(2)}, ${lon.toFixed(2)}`
+    )
+  } catch {
+    return `${lat.toFixed(2)}, ${lon.toFixed(2)}`
   }
 }

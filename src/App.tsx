@@ -7,6 +7,7 @@ import { useCalendar } from './hooks/useCalendar'
 import { useTasks } from './hooks/useTasks'
 import { useCalendarList } from './hooks/useCalendarList'
 import { useHiddenCalendars } from './hooks/useHiddenCalendars'
+import { useLocationName } from './hooks/useLocationName'
 import { LeftPanel } from './components/LeftPanel/LeftPanel'
 import { CenterPanel } from './components/CenterPanel/CenterPanel'
 import { RightPanel } from './components/RightPanel/RightPanel'
@@ -19,6 +20,7 @@ export default function App() {
   const auth = useGoogleAuth()
   const { lat, lon } = useLocation()
   const weather = useWeather(lat, lon)
+  const locationName = useLocationName(lat, lon)
   const { hiddenIds, toggleHidden } = useHiddenCalendars()
   const calendarList = useCalendarList(auth.accessToken)
   const visibleCalendarIds = calendarList.calendars
@@ -84,7 +86,7 @@ export default function App() {
         width: '100vw',
       }}>
         <div style={{ background: 'var(--panel-left)', padding: '24px', overflowY: 'auto' }}>
-          <LeftPanel weather={weather.data} weatherLoading={weather.loading} weatherError={weather.error} />
+          <LeftPanel weather={weather.data} weatherLoading={weather.loading} weatherError={weather.error} locationName={locationName} />
         </div>
         <div style={{ background: 'var(--panel-center)', padding: '24px', overflowY: 'auto' }}>
           <CenterPanel events={calendar.events} loading={calendar.loading} error={calendar.error} />

@@ -13,6 +13,8 @@ export interface WeatherData {
   today: {
     min: number
     max: number
+    sunrise: string  // HH:MM
+    sunset: string   // HH:MM
   }
   hourly: HourlySlot[]  // next 5 hours
 }

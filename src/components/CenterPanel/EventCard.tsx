@@ -12,7 +12,7 @@ const CALENDAR_COLORS: Record<string, string> = {
 }
 
 function formatTime(dt: string): string {
-  return dt.slice(11, 16)
+  return new Date(dt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
 }
 
 function durationLabel(startDt: string, endDt: string): string {

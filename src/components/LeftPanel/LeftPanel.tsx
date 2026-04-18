@@ -8,15 +8,16 @@ interface Props {
   weather: WeatherData | null
   weatherLoading: boolean
   weatherError: string | null
+  locationName: string | null
 }
 
-export function LeftPanel({ weather, weatherLoading, weatherError }: Props) {
+export function LeftPanel({ weather, weatherLoading, weatherError, locationName }: Props) {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <ClockWidget />
       <DateWidget />
       <div style={{ flex: 1 }}>
-        <WeatherWidget data={weather} loading={weatherLoading} error={weatherError} />
+        <WeatherWidget data={weather} loading={weatherLoading} error={weatherError} locationName={locationName} />
       </div>
     </div>
   )
