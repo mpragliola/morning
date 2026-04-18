@@ -24,8 +24,40 @@ async function mockAPIs(page: Page) {
     })
   )
 
-  await page.route('**/calendar/v3/calendars/**', route =>
-    route.fulfill({
+  await page.route('**/calendar/v3/calendars/**', route => {
+    const url = new URL(route.request().url())
+    const timeMin = url.searchParams.get('timeMin') ?? ''
+
+    // Compute tomorrow's timeMin using the same logic as useTomorrowCalendar (local midnight → ISO)
+    const now = new Date()
+    const tomorrowLocalMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+    const tomorrowTimeMin = tomorrowLocalMidnight.toISOString()
+
+    // Compute the day after tomorrow's timeMin to bound the range
+    const dayAfterLocalMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2)
+    const dayAfterTimeMin = dayAfterLocalMidnight.toISOString()
+
+    // If timeMin matches tomorrow's range, serve tomorrow's events
+    if (timeMin >= tomorrowTimeMin && timeMin < dayAfterTimeMin) {
+      // Build tomorrow's event datetimes using the same local midnight base
+      const tomorrowDateStr = tomorrowLocalMidnight.toISOString().slice(0, 11)
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          items: [
+            {
+              id: 'tmr1',
+              summary: 'Saturday Gym',
+              start: { dateTime: tomorrowDateStr + '10:00:00' },
+              end: { dateTime: tomorrowDateStr + '11:00:00' },
+            },
+          ],
+        }),
+      })
+    }
+
+    return route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
@@ -48,7 +80,7 @@ async function mockAPIs(page: Page) {
         ],
       }),
     })
-  )
+  })
 
   await page.route('**/tasks/v1/users/@me/lists**', route =>
     route.fulfill({

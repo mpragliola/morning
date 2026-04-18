@@ -80,4 +80,10 @@ test.describe('Dashboard (authenticated)', () => {
     await page.mouse.click(10, 10)
     await expect(page.getByLabel('Close')).not.toBeVisible()
   })
+
+  test('shows tomorrow preview with label and events', async ({ authenticatedPage: page }) => {
+    await expect(page.getByText('Morning Standup')).toBeVisible({ timeout: 8000 })
+    await expect(page.getByTestId('tomorrow-label')).toBeVisible()
+    await expect(page.getByText('Saturday Gym')).toBeVisible()
+  })
 })
