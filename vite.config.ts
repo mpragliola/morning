@@ -8,5 +8,6 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
     typecheck: { tsconfig: './tsconfig.test.json' },
+    exclude: ['**/node_modules/**', '**/e2e/**'],
   },
 })

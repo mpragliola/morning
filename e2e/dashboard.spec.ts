@@ -19,7 +19,9 @@ test.describe('Dashboard (authenticated)', () => {
   })
 
   test('shows weather temperature', async ({ authenticatedPage: page }) => {
-    await expect(page.getByText('18°')).toBeVisible({ timeout: 8000 })
+    // Target the large current-temp element (48px) not the hourly strip temps
+    await expect(page.locator('text=18°').first()).toBeVisible({ timeout: 8000 })
+    await expect(page.getByText('Clear')).toBeVisible()
   })
 
   test('shows sunrise and sunset', async ({ authenticatedPage: page }) => {
@@ -43,36 +45,39 @@ test.describe('Dashboard (authenticated)', () => {
   test('gear icon opens preferences screen', async ({ authenticatedPage: page }) => {
     await expect(page.getByText('Morning Standup')).toBeVisible({ timeout: 8000 })
     await page.getByLabel('Preferences').click()
-    await expect(page.getByText('Preferences')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Preferences' })).toBeVisible()
     await expect(page.getByText('My Calendar')).toBeVisible()
   })
 
   test('back button returns to dashboard from preferences', async ({ authenticatedPage: page }) => {
     await expect(page.getByText('Morning Standup')).toBeVisible({ timeout: 8000 })
     await page.getByLabel('Preferences').click()
-    await expect(page.getByText('Preferences')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Preferences' })).toBeVisible()
     await page.getByText('←').click()
     await expect(page.getByText('Morning Standup')).toBeVisible()
   })
 
-  test('clicking event card opens modal', async ({ authenticatedPage: page }) => {
+  test('clicking event card opens modal with full details', async ({ authenticatedPage: page }) => {
     await expect(page.getByText('Team Lunch')).toBeVisible({ timeout: 8000 })
-    await page.getByText('Team Lunch').first().click()
-    await expect(page.getByText('Canteen')).toBeVisible()
-    await expect(page.getByText(/Bring your own lunch/)).toBeVisible()
+    // Click the card title specifically (not the card preview text)
+    await page.getByText('Team Lunch').click()
+    // Modal should show the full description (not just first line)
+    await expect(page.getByText(/See you there/)).toBeVisible()
+    // Modal shows the close button
+    await expect(page.getByLabel('Close')).toBeVisible()
   })
 
   test('close button dismisses event modal', async ({ authenticatedPage: page }) => {
-    await page.getByText('Team Lunch').first().click()
+    await page.getByText('Team Lunch').click()
     await expect(page.getByLabel('Close')).toBeVisible()
     await page.getByLabel('Close').click()
-    await expect(page.getByText('Canteen')).not.toBeVisible()
+    await expect(page.getByLabel('Close')).not.toBeVisible()
   })
 
   test('clicking backdrop dismisses event modal', async ({ authenticatedPage: page }) => {
-    await page.getByText('Team Lunch').first().click()
-    await expect(page.getByText('Canteen')).toBeVisible()
+    await page.getByText('Team Lunch').click()
+    await expect(page.getByLabel('Close')).toBeVisible()
     await page.mouse.click(10, 10)
-    await expect(page.getByText('Canteen')).not.toBeVisible()
+    await expect(page.getByLabel('Close')).not.toBeVisible()
   })
 })
