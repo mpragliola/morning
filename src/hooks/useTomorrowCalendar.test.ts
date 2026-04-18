@@ -59,3 +59,11 @@ test('returns empty array when no accessToken', async () => {
   expect(result.current.loading).toBe(false)
   expect(result.current.events).toEqual([])
 })
+
+test('returns error string when fetch rejects', async () => {
+  mockFetch.mockRejectedValue(new Error('network failure'))
+  const { result } = renderHook(() => useTomorrowCalendar('fake-token', ['primary']))
+  await waitFor(() => expect(result.current.loading).toBe(false))
+  expect(result.current.error).toBe("Couldn't load tomorrow's events.")
+  expect(result.current.events).toEqual([])
+})
