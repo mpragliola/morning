@@ -9,7 +9,7 @@ describe('useWeather', () => {
   it('starts loading then returns data', async () => {
     const mockData = {
       current: { temp: 20, weatherCode: 0, condition: 'Clear' },
-      today: { min: 15, max: 25 },
+      today: { min: 15, max: 25, sunrise: '06:15', sunset: '20:30' },
       hourly: [],
     }
     vi.spyOn(weatherApi, 'fetchWeather').mockResolvedValue(mockData)
