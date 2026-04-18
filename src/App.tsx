@@ -4,6 +4,7 @@ import { useGoogleAuth } from './hooks/useGoogleAuth'
 import { useLocation } from './hooks/useLocation'
 import { useWeather } from './hooks/useWeather'
 import { useCalendar } from './hooks/useCalendar'
+import { useTomorrowCalendar } from './hooks/useTomorrowCalendar'
 import { useTasks } from './hooks/useTasks'
 import { useCalendarList } from './hooks/useCalendarList'
 import { useHiddenCalendars } from './hooks/useHiddenCalendars'
@@ -27,6 +28,7 @@ export default function App() {
     .filter(c => !hiddenIds.has(c.id))
     .map(c => c.id)
   const calendar = useCalendar(auth.accessToken, visibleCalendarIds)
+  const tomorrow = useTomorrowCalendar(auth.accessToken, visibleCalendarIds)
   const tasks = useTasks(auth.accessToken)
 
   if (auth.loading) {
@@ -89,7 +91,7 @@ export default function App() {
           <LeftPanel weather={weather.data} weatherLoading={weather.loading} weatherError={weather.error} locationName={locationName} />
         </div>
         <div style={{ background: 'var(--panel-center)', padding: '24px', overflowY: 'auto' }}>
-          <CenterPanel events={calendar.events} loading={calendar.loading} error={calendar.error} />
+          <CenterPanel events={calendar.events} loading={calendar.loading} error={calendar.error} tomorrowEvents={tomorrow.events} />
         </div>
         <div style={{ background: 'var(--panel-right)', padding: '24px', overflowY: 'auto' }}>
           <RightPanel tasks={tasks.tasks} loading={tasks.loading} error={tasks.error} onToggle={tasks.toggleTask} />
