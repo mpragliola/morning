@@ -24,7 +24,7 @@ describe('fetchWeather', () => {
       ok: true,
       json: async () => ({
         current: { temperature_2m: 18, weather_code: 0 },
-        daily: { temperature_2m_min: [12], temperature_2m_max: [22] },
+        daily: { temperature_2m_min: [12], temperature_2m_max: [22], sunrise: ['2026-04-17T06:15'], sunset: ['2026-04-17T20:30'] },
         hourly: {
           time: ['2026-04-17T10:00', '2026-04-17T11:00', '2026-04-17T12:00',
                  '2026-04-17T13:00', '2026-04-17T14:00'],
@@ -40,6 +40,8 @@ describe('fetchWeather', () => {
     expect(result.current.condition).toBe('Clear')
     expect(result.today.min).toBe(12)
     expect(result.today.max).toBe(22)
+    expect(result.today.sunrise).toBe('06:15')
+    expect(result.today.sunset).toBe('20:30')
     expect(result.hourly).toHaveLength(5)
     expect(result.hourly[0]).toEqual({ time: '2026-04-17T10:00', temp: 17, weatherCode: 0 })
   })
