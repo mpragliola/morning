@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { fetchWeather, wmoCondition } from '../../src/api/weather'
+import { fetchWeather, wmoCondition, reverseGeocode } from '../../src/api/weather'
 
 describe('wmoCondition', () => {
   it('returns Clear for code 0', () => {
@@ -44,5 +44,57 @@ describe('fetchWeather', () => {
     expect(result.today.sunset).toBe('20:30')
     expect(result.hourly).toHaveLength(5)
     expect(result.hourly[0]).toEqual({ time: '2026-04-17T10:00', temp: 17, weatherCode: 0 })
+  })
+})
+
+describe('reverseGeocode', () => {
+  beforeEach(() => { vi.restoreAllMocks() })
+
+  it('returns city name when present', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        address: { city: 'Milan', country: 'Italy' },
+        display_name: 'Milan, Italy',
+      }),
+    }))
+    const result = await reverseGeocode(45.46, 9.19)
+    expect(result).toBe('Milan')
+  })
+
+  it('falls back to town when city absent', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        address: { town: 'Lecco' },
+        display_name: 'Lecco, Italy',
+      }),
+    }))
+    const result = await reverseGeocode(45.85, 9.39)
+    expect(result).toBe('Lecco')
+  })
+
+  it('falls back to coords when fetch fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network error')))
+    const result = await reverseGeocode(45.46, 9.19)
+    expect(result).toBe('45.46, 9.19')
+  })
+
+  it('falls back to coords when response not ok', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
+    const result = await reverseGeocode(45.46, 9.19)
+    expect(result).toBe('45.46, 9.19')
+  })
+
+  it('falls back to display_name first word when no address fields match', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        address: {},
+        display_name: 'Somewhere, Region, Country',
+      }),
+    }))
+    const result = await reverseGeocode(1.0, 2.0)
+    expect(result).toBe('Somewhere')
   })
 })
