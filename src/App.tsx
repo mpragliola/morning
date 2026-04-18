@@ -90,7 +90,7 @@ export default function App() {
         <div style={{ background: 'var(--panel-left)', padding: '24px', overflowY: 'auto' }}>
           <LeftPanel weather={weather.data} weatherLoading={weather.loading} weatherError={weather.error} locationName={locationName} />
         </div>
-        <div style={{ background: 'var(--panel-center)', padding: '24px', overflowY: 'auto' }}>
+        <div style={{ background: 'var(--panel-center)', padding: '24px', overflow: 'hidden' }}>
           <CenterPanel events={calendar.events} loading={calendar.loading} error={calendar.error} tomorrowEvents={tomorrow.events} />
         </div>
         <div style={{ background: 'var(--panel-right)', padding: '24px', overflowY: 'auto' }}>
