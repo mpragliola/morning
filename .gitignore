@@ -38,3 +38,6 @@ coverage
 # Playwright
 test-results
 playwright-report
+
+# Superpowers brainstorm sessions
+.superpowers/
