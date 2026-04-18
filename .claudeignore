@@ -1,0 +1,7 @@
+node_modules
+dist
+dist-ssr
+android
+coverage
+test-results
+playwright-report
