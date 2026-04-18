@@ -40,7 +40,7 @@ async function mockAPIs(page: Page) {
     // If timeMin matches tomorrow's range, serve tomorrow's events
     if (timeMin >= tomorrowTimeMin && timeMin < dayAfterTimeMin) {
       // Build tomorrow's event datetimes using the same local midnight base
-      const tomorrowDateStr = tomorrowLocalMidnight.toISOString().slice(0, 11)
+      const tomorrowDateStr = tomorrowLocalMidnight.toLocaleDateString('en-CA') + 'T'
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
