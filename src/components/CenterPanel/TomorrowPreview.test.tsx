@@ -28,9 +28,10 @@ test('renders event title', () => {
 
 test('renders formatted time for each event', () => {
   render(<TomorrowPreview events={[makeEvent('e1', 'Gym', 10)]} />)
-  // Time formatted as HH:MM in user locale — just check it contains digits and colon
   const rows = screen.getAllByTestId('tomorrow-event-row')
   expect(rows).toHaveLength(1)
+  const timeSpan = rows[0].querySelector('span')
+  expect(timeSpan?.textContent).toMatch(/^\d{2}:\d{2}$/)
 })
 
 test('renders multiple events', () => {
@@ -45,4 +46,15 @@ test('renders multiple events', () => {
   expect(screen.getByText('Gym')).toBeInTheDocument()
   expect(screen.getByText('Dinner')).toBeInTheDocument()
   expect(screen.getAllByTestId('tomorrow-event-row')).toHaveLength(2)
+})
+
+test('renders All day for all-day events', () => {
+  const allDay: CalendarEvent = {
+    id: 'e1',
+    summary: 'Holiday',
+    start: { date: '2026-04-19' },
+    end: { date: '2026-04-20' },
+  }
+  render(<TomorrowPreview events={[allDay]} />)
+  expect(screen.getByText('All day')).toBeInTheDocument()
 })
