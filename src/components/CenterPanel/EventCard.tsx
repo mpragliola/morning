@@ -45,6 +45,7 @@ export function EventCard({ event }: Props) {
   return (
     <>
       <div
+        data-testid="event-card"
         onClick={() => setOpen(true)}
         style={{
           background: 'var(--card-bg)',
